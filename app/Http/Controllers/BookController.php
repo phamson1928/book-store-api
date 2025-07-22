@@ -34,17 +34,27 @@ class BookController extends Controller
             'price' => 'required|numeric',
             'image' => 'nullable|string',
             'publication_date' => 'nullable|date',
-            'status' => 'nullable|string',
             'description' => 'nullable|string',
             'language' => 'nullable|string',
-            'borrow_count' => 'nullable|integer',
-            'borrow_date' => 'nullable|date',
-            'return_date' => 'nullable|date',
+            'category' => 'nullable|string',
+            'discount_price' => 'nullable|numeric',
+            'new_best_seller' => 'nullable|boolean',
+            'weight_in_grams' => 'nullable|integer',
+            'packaging_size_cm' => 'nullable|string',
+            'number_of_pages' => 'nullable|integer',
+            'form' => 'nullable|string',
+            'state' => 'nullable|in:available,out_of_stock',
         ]);
 
         $data = $request->all();
 
         $book = Book::create($data);
+
+        // Nếu có trường is_trending và là true, thêm vào trending_books
+        if ($request->has('is_trending') && $request->boolean('is_trending')) {
+            \App\Models\TrendingBook::create(['book_id' => $book->id]);
+        }
+
         return response()->json($book, 201);
     }
 
@@ -82,5 +92,18 @@ class BookController extends Controller
     {
         Book::findOrFail($id)->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * Display a listing of the trending books.
+     */
+    public function trending()
+    {
+        $trendingBooks = Book::join('trending_books', 'books.id', '=', 'trending_books.book_id')
+                         ->select('books.*')
+                         ->orderBy('trending_books.created_at', 'desc')
+                         ->get();
+
+        return response()->json($trendingBooks);
     }
 }

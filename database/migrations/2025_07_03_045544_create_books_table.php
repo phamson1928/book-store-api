@@ -20,11 +20,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->date('publication_date')->nullable();
             $table->string('language')->nullable();
-            $table->integer('borrow_count')->default(0);
-            $table->date('borrow_date')->nullable();
-            $table->date('return_date')->nullable();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('status')->default('available');
+            $table->string('category')->nullable();
+            $table->decimal('discount_price', 10, 2)->nullable();
+            $table->boolean('new_best_seller')->default(false);
             $table->timestamps();
         });
     }

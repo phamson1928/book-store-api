@@ -15,10 +15,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('books',BookController::class)->middleware('checkAdmin');
 });
 
-Route::get('/test', function () {
-    return response()->json([
-        'status' => 'success',
-        'message' => 'API đang hoạt động bình thường!',
-        'timestamp' => now()
-    ]);
-});
+Route::get('/trending-books', [BookController::class, 'trending']);

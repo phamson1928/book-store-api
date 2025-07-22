@@ -16,12 +16,15 @@ class Book extends Model
         'price',
         'image',
         'publication_date',
-        'user_id',
-        'status',
         'description',
         'language',
-        'borrow_count',
-        'borrow_date',
-        'return_date'
+        'category',
+        'discount_price',
+        'new_best_seller',
+        'weight_in_grams',
+        'packaging_size_cm',
+        'number_of_pages',
+        'form',
+        'state',
     ];
 }
