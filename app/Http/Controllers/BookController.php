@@ -32,21 +32,25 @@ class BookController extends Controller
             'title' => 'required|string',
             'author' => 'required|string',
             'price' => 'required|numeric',
-            'image' => 'nullable|string',
-            'publication_date' => 'nullable|date',
-            'description' => 'nullable|string',
-            'language' => 'nullable|string',
-            'category' => 'nullable|string',
-            'discount_price' => 'nullable|numeric',
-            'new_best_seller' => 'nullable|boolean',
-            'weight_in_grams' => 'nullable|integer',
-            'packaging_size_cm' => 'nullable|string',
-            'number_of_pages' => 'nullable|integer',
-            'form' => 'nullable|string',
-            'state' => 'nullable|in:available,out_of_stock',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'publication_date' => 'required|date',
+            'description' => 'required|string',
+            'language' => 'required|string',
+            'category' => 'required|string',
+            'discount_price' => 'required|numeric',
+            'new_best_seller' => 'required|boolean',
+            'weight_in_grams' => 'required|integer',
+            'packaging_size_cm' => 'required|string',
+            'number_of_pages' => 'required|integer',
+            'form' => 'required|string',
+            'state' => 'required|in:available,out_of_stock',
         ]);
 
-        $data = $request->all();
+        $path = $request->file('image')->store('books','public');
+
+        $data = $request->except('image');
+
+        $data['image'] = $path;
 
         $book = Book::create($data);
 
