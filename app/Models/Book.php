@@ -27,4 +27,8 @@ class Book extends Model
         'form',
         'state',
     ];
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
 }
