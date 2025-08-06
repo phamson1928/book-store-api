@@ -12,7 +12,6 @@ class AuthorController extends Controller
         return Author::all();
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
