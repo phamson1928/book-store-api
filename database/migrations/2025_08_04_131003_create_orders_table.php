@@ -15,11 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('address');
-            $table->string('products');
             $table->integer('quantity');
             $table->decimal('total_cost',10,2);
             $table->string('state');
-            $table->date_create_from_format('order_date');
             $table->timestamps();
         });
     }

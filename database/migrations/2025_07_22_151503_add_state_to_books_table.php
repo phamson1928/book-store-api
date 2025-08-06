@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('books', function (Blueprint $table) {
-            $table->string('state')->default('available'); // available: còn hàng, out_of_stock: hết hàng
+            $table->string('state')->default('available');
         });
     }
 

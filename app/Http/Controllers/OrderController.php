@@ -4,62 +4,52 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return Order::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'address'=>'required|string',
+            'quantity'=>'required|integer',
+            'total_cost'=>'required|numeric',
+            'state'=>'required|string',
+        ]);
+        $data = Order::create([
+            'user_id'=>Auth::id(),
+            'address'=>$request->address,
+            'quantity'=>$request->quantity,
+            'total_cost'=>$request->total_cost,
+            'state'=>'pending',
+        ]);
+        return response()->json($data);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
+    public function show($id)
     {
-        //
+        return response()->json(Order::findOrFail($id));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
+    public function update(Request $request,$id)
     {
-        //
+        $request->validate([
+            'address'=>'required|string',
+            'quantity'=>'required|integer',
+            'total_cost'=>'required|numeric',
+            'state'=>'required|string',
+        ]);
+        $data = Order::findOrFail($id)->update($request->all());
+        return response()->json(['message'=>'Chinh sửa thành công',$data]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Order $order)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
+        return response()->json(['message'=>'Xóa thành công',Order::findOrFail($id)->delete()]);
     }
 }
