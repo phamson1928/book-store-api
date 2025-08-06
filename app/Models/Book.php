@@ -18,7 +18,7 @@ class Book extends Model
         'publication_date',
         'description',
         'language',
-        'category',
+        'category_id',
         'discount_price',
         'new_best_seller',
         'weight_in_grams',
@@ -30,5 +30,13 @@ class Book extends Model
     public function author()
     {
         return $this->belongsTo(Author::class);
+    }
+
+    /**
+     * Get the category that owns the book.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
