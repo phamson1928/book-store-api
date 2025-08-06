@@ -17,5 +17,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('authors',AuthorController::class)->middleware('checkAdmin');
 });
 
-Route::get('/trending-books', [BookController::class, 'trending']);
 Route::get('list-books-of-author/{id}', [AuthorController::class, 'getBooksByAuthor']);

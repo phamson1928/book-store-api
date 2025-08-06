@@ -36,10 +36,6 @@ class BookController extends Controller
         $data = $request->except('image');
         $data['image'] = $path;
         $book = Book::create($data);
-        // Nếu có trường is_trending và là true, thêm vào trending_books
-        if ($request->has('is_trending') && $request->boolean('is_trending')) {
-            \App\Models\TrendingBook::create(['book_id' => $book->id]);
-        }
         return response()->json($book, 201);
     }
 
@@ -79,14 +75,5 @@ class BookController extends Controller
     {
         Book::findOrFail($id)->delete();
         return response()->json(null, 204);
-    }
-
-    public function trending()
-    {
-        $trendingBooks = Book::join('trending_books', 'books.id', '=', 'trending_books.book_id')
-                         ->select('books.*')
-                         ->orderBy('trending_books.created_at', 'desc')
-                         ->get();
-        return response()->json($trendingBooks);
     }
 }
