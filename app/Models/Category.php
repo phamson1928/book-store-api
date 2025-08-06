@@ -13,10 +13,6 @@ class Category extends Model
         'name',
         'description',
     ];
-
-    /**
-     * Get the books that belong to this category.
-     */
     public function books()
     {
         return $this->hasMany(Book::class);
