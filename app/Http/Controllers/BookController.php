@@ -9,14 +9,15 @@ class BookController extends Controller
 {
     public function index()
     {
-        return Book::all();
+        return Book::with('author','category')->get();
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string',
-            'author' => 'required|string',
+            'author' => 'nullable|string',
+            'author_id' => 'nullable|exists:authors,id',
             'price' => 'required|numeric',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'publication_date' => 'required|date',
@@ -41,7 +42,7 @@ class BookController extends Controller
 
     public function show($id)
     {
-        $book = Book::findOrFail($id);
+        $book = Book::with('author','category')->findOrFail($id);
         return response()->json($book);
     }
 
@@ -64,7 +65,7 @@ class BookController extends Controller
             'form' => 'required|string',
             'state' => 'required|in:available,out_of_stock',
         ]);
-        $book = Book::findOrFail($id);
+        $book = Book::with('author','category')->findOrFail($id);
         $path = $request->file('image')->store('books','public');
         $data = $request->except('image');
         $data['image'] = $path;
