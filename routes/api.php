@@ -33,19 +33,19 @@ Route::middleware('auth:sanctum')->group(function () {
     //Admin quản lý sách, tác giả, thể loại, đơn hàng
     Route::middleware('checkAdmin')->group(function () {
         //Lưu sách, tác giả, thể loại, đơn hàng
-        Route::post('books',BookController::class,'store');
-        Route::post('authors',AuthorController::class,'store');
-        Route::post('categories',CategoryController::class,'store');
-        Route::post('orders',OrderController::class,'store');
+        Route::post('books',[BookController::class,'store']);
+        Route::post('authors',[AuthorController::class,'store']);
+        Route::post('categories',[CategoryController::class,'store']);
+        Route::post('orders',[OrderController::class,'store']);
         //Sửa sách, tác giả, thể loại, đơn hàng
-        Route::put('books/{id}',BookController::class,'update');
-        Route::put('authors/{id}',AuthorController::class,'update');
-        Route::put('categories/{id}',CategoryController::class,'update');
-        Route::put('orders/{id}',OrderController::class,'update');
+        Route::put('books/{id}',[BookController::class,'update']);
+        Route::put('authors/{id}',[AuthorController::class,'update']);
+        Route::put('categories/{id}',[CategoryController::class,'update']);
+        Route::put('orders/{id}',[OrderController::class,'update']);
         //Xóa sách, tác giả, thể loại, đơn hàng
-        Route::delete('books/{id}',BookController::class,'destroy');
-        Route::delete('authors/{id}',AuthorController::class,'destroy');
-        Route::delete('categories/{id}',CategoryController::class,'destroy');
-        Route::delete('orders/{id}',OrderController::class,'destroy');
+        Route::delete('books/{id}',[BookController::class,'destroy']);
+        Route::delete('authors/{id}',[AuthorController::class,'destroy']);
+        Route::delete('categories/{id}',[CategoryController::class,'destroy']);
+        Route::delete('orders/{id}',[OrderController::class,'destroy']);
     });
 });
