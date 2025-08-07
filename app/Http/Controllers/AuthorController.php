@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreAuthorRequest;
+use App\Http\Requests\UpdateAuthorRequest;
 
 class AuthorController extends Controller
 {
@@ -13,41 +14,37 @@ class AuthorController extends Controller
         return response()->json($authors);
     }
 
-    public function store(Request $request)
+    public function store(StoreAuthorRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'age' => 'required|integer',
-            'gender' => 'required|string',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'description' => 'required|string',
-        ]);
+        $data = $request->validated();
         
-        $path = $request->file('image')->store('authors','public');
-        $data = $request->except('image');
-        $data['image'] = $path;
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('authors', 'public');
+            $data['image'] = $path;
+        }
+        
         $author = Author::create($data);
         return response()->json($author, 201);
     }
 
     public function show($id)
     {
-        $author =  Author::with('books')->findOrFail($id);
+        $author = Author::with('books')->findOrFail($id);
         return response()->json($author);
     }
 
-    public function update(Request $request, Author $author)
+    public function update(UpdateAuthorRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'age' => 'required|integer',
-            'gender' => 'required|string',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'description' => 'required|string',
-        ]);
-        $path = $request->file('image')->store('authors','public');
-        $data = $request->except('image');
-        $data['image'] = $path;
+        $author = Author::findOrFail($id);
+        $data = $request->validated();
+        
+        // Handle image upload if provided
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('authors', 'public');
+            $data['image'] = $path;
+        }
+        
         $author->update($data);
         return response()->json($author);
     }

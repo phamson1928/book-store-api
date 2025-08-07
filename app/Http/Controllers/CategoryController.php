@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -12,13 +13,10 @@ class CategoryController extends Controller
         return response()->json(Category::all());
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:categories,name',
-            'description' => 'nullable|string',
-        ]);
-        $category = Category::create($validated);
+        $data = $request->validated();
+        $category = Category::create($data);
         return response()->json($category, 201);
     }
 
@@ -28,14 +26,11 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, $id)
     {
         $category = Category::findOrFail($id);
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|unique:categories,name,' . $id,
-            'description' => 'nullable|string',
-        ]);
-        $category->update($validated);
+        $data = $request->validated();
+        $category->update($data);
         return response()->json($category);
     }
 
