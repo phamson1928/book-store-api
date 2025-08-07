@@ -9,7 +9,8 @@ class AuthorController extends Controller
 {
     public function index()
     {
-        return Author::all();
+        $authors = Author::with('books')->get();
+        return response()->json($authors);
     }
 
     public function store(Request $request)
@@ -31,7 +32,7 @@ class AuthorController extends Controller
 
     public function show($id)
     {
-        $author =  Author::findOrFail($id);
+        $author =  Author::with('books')->findOrFail($id);
         return response()->json($author);
     }
 
@@ -56,10 +57,5 @@ class AuthorController extends Controller
         $author = Author::findOrFail($id);
         $author->delete();
         return response()->json(['message' => 'Author deleted successfully']);
-    }
-    public function getBooksByAuthor($id)
-    {
-        $books = Author::with('books')->findOrFail($id);
-        return response()->json($books);
     }
 }

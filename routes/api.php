@@ -23,9 +23,6 @@ Route::get('authors/{id}', [AuthorController::class,'show']);
 Route::get('categories/{id}', [CategoryController::class,'show']);
 Route::get('orders/{id}', [OrderController::class,'show']);
 
-//Lấy sách theo tác giả
-Route::get('list-books-of-author/{id}', [AuthorController::class, 'getBooksByAuthor']);
-
 //Phân quyền đăng nhập, đăng ký, quản lý tài khoản
 Route::middleware('auth:sanctum')->group(function () {
     //Quản lý tài khoản
