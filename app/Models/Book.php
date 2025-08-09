@@ -16,6 +16,7 @@ class Book extends Model
         'author_id',
         'price',
         'image',
+        'quantity',
         'publication_date',
         'description',
         'language',
