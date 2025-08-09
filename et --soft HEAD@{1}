@@ -1,0 +1,19 @@
+[33mb37f669[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: commit (amend): add-count-category-bools
+[33mfb778d8[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: commit: add-validation-request-classes
+[33mf0d1fa8[m HEAD@{2}: commit: add-author-id-to-model
+[33m8f9afaf[m HEAD@{3}: commit: fix-syntax-route
+[33m25726d6[m HEAD@{4}: commit: add-eager-loading-in-author-controller
+[33m49cbc5a[m HEAD@{5}: commit: fix-route-middleware-api
+[33mf44d9de[m HEAD@{6}: commit: delete-column-new-best-seller
+[33m474d706[m HEAD@{7}: commit: update-relationship-orders-table-and-order-items-table
+[33mfe4cbf1[m HEAD@{8}: commit: delete-trending-books-table-2
+[33m1fc4786[m HEAD@{9}: commit: add-relationship-books-table-to-categories-table
+[33m618b61f[m HEAD@{10}: commit: delete-trending-table
+[33m228b9c8[m HEAD@{11}: commit: add-order-items-table
+[33m0a95969[m HEAD@{12}: commit: add-orders-table-and-optimize-functions
+[33mce6a30c[m HEAD@{13}: commit: add-order-feature
+[33ma20eb3a[m HEAD@{14}: commit: add-authors-table
+[33ma6abab4[m HEAD@{15}: commit: add-handle-images
+[33m5e5f6a2[m HEAD@{16}: commit: add-column-to-database-and-trending-books-table
+[33m74446d6[m HEAD@{17}: Branch: renamed refs/heads/master to refs/heads/main
+[33m74446d6[m HEAD@{19}: commit (initial): first commit
