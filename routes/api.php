@@ -1,56 +1,90 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\AuthorController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\{
+    AuthController,
+    BookController,
+    AuthorController,
+    CategoryController,
+    OrderController,
+    DashboardController,
+    PingController,
+    UserController
+};
 
-//Đăng nhập, đăng ký
+/*
+|--------------------------------------------------------------------------
+| Public Routes (Không cần đăng nhập)
+|--------------------------------------------------------------------------
+*/
+
+// Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-//Show tất cả sách, tác giả, thể loại, đơn hàng
-Route::get('books', [BookController::class,'index']);
-Route::get('authors', [AuthorController::class,'index']);
-Route::get('categories', [CategoryController::class,'index']);
-Route::get('orders', [OrderController::class,'index']);
+// Danh sách public
+Route::get('/books', [BookController::class, 'index']);
+Route::get('/books/{id}', [BookController::class, 'show']);
 
-//Show riêng sách, tác giả, thể loại, đơn hàng
-Route::get('books/{id}', [BookController::class,'show']);
-Route::get('authors/{id}', [AuthorController::class,'show']);
-Route::get('categories/{id}', [CategoryController::class,'show']);
-Route::get('orders/{id}', [OrderController::class,'show']);
+Route::get('/authors', [AuthorController::class, 'index']);
+Route::get('/authors/{id}', [AuthorController::class, 'show']);
 
-//Phân quyền đăng nhập, đăng ký, quản lý tài khoản
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{id}', [CategoryController::class, 'show']);
+
+Route::get('/orders', [OrderController::class, 'index']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes (Cần đăng nhập)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth:sanctum')->group(function () {
-    
-    //Quản lý tài khoản
+
+    // Quản lý tài khoản
     Route::get('/user', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/tokens', [AuthController::class, 'tokens']);
     Route::post('/logout-all', [AuthController::class, 'logoutAll']);
+    Route::get('/tokens', [AuthController::class, 'tokens']);
 
-    //Admin quản lý sách, tác giả, thể loại, đơn hàng
+    // Ping cập nhật trạng thái online
+    Route::post('/ping', [PingController::class, 'ping']);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Routes (Cần quyền admin)
+    |--------------------------------------------------------------------------
+    */
     Route::middleware('checkAdmin')->group(function () {
-        //Lưu sách, tác giả, thể loại, đơn hàng
-        Route::post('books',[BookController::class,'store']);
-        Route::post('authors',[AuthorController::class,'store']);
-        Route::post('categories',[CategoryController::class,'store']);
-        Route::post('orders',[OrderController::class,'store']);
-        //Sửa sách, tác giả, thể loại, đơn hàng
-        Route::put('books/{id}',[BookController::class,'update']);
-        Route::put('authors/{id}',[AuthorController::class,'update']);
-        Route::put('categories/{id}',[CategoryController::class,'update']);
-        Route::put('orders/{id}',[OrderController::class,'update']);
-        //Xóa sách, tác giả, thể loại, đơn hàng
-        Route::delete('books/{id}',[BookController::class,'destroy']);
-        Route::delete('authors/{id}',[AuthorController::class,'destroy']);
-        Route::delete('categories/{id}',[CategoryController::class,'destroy']);
-        Route::delete('orders/{id}',[OrderController::class,'destroy']);
-        //Show stats tháng này của trang DashBoard
+
+        // CRUD Sách
+        Route::post('/books', [BookController::class, 'store']);
+        Route::put('/books/{id}', [BookController::class, 'update']);
+        Route::delete('/books/{id}', [BookController::class, 'destroy']);
+
+        // CRUD Tác giả
+        Route::post('/authors', [AuthorController::class, 'store']);
+        Route::put('/authors/{id}', [AuthorController::class, 'update']);
+        Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
+
+        // CRUD Thể loại
+        Route::post('/categories', [CategoryController::class, 'store']);
+        Route::put('/categories/{id}', [CategoryController::class, 'update']);
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+        // CRUD Đơn hàng
+        Route::post('/orders', [OrderController::class, 'store']);
+        Route::put('/orders/{id}', [OrderController::class, 'update']);
+        Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+
+        // Thống kê Dashboard
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+        Route::get('/categories/stats', [CategoryController::class, 'stats']);
+        Route::get('/authors/stats', [AuthorController::class, 'stats']);
+        Route::get('/orders/stats', [OrderController::class, 'stats']);
+        Route::get('/users/stats', [UserController::class, 'stats']);
     });
 });

@@ -98,4 +98,17 @@ class OrderController extends Controller
             'message' => 'Xóa đơn hàng thành công'
         ]);
     }
+
+    public function stats(){
+        $orderTotal = Order::all()->count();
+        $deliveredOrder = Order::where('state','delivered')->count();
+        $pendingOrder = Order::where('state','pending')->count();
+        $totalRevenue = Order::sum('totalCost');
+        return response()->json([
+            'orderTotal' => $orderTotal,
+            'deliveredOrder' => $deliveredOrder,
+            'pendingOrder' => $pendingOrder,
+            'totalRevenue' => $totalRevenue
+        ]);
+    }
 }

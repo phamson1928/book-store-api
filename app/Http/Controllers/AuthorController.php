@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use App\Models\Book;
 
 class AuthorController extends Controller
 {
     public function index()
     {
-        $authors = Author::with('books')->get();
+        $authors = Author::withCount('books')->get();
         return response()->json($authors);
     }
 
@@ -44,7 +45,6 @@ class AuthorController extends Controller
             $path = $request->file('image')->store('authors', 'public');
             $data['image'] = $path;
         }
-        
         $author->update($data);
         return response()->json($author);
     }
@@ -54,5 +54,18 @@ class AuthorController extends Controller
         $author = Author::findOrFail($id);
         $author->delete();
         return response()->json(['message' => 'Author deleted successfully']);
+    }
+
+     public function stats(){
+        $authorsTotal = Author::count();
+        $booksTotal = Book::count();
+        $maleAuthors = Author::where('gender','male')->count();
+        $femaleAuthors = Author::where('gender','female')->count();
+        return response()->json([
+            'authorsTotal' => $authorsTotal,
+            'booksTotal' => $booksTotal,
+            'maleAuthors' => $maleAuthors,
+            'femaleAuthors' => $femaleAuthors
+        ]);
     }
 }

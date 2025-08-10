@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Models\Book;
 
 class CategoryController extends Controller
 {
@@ -39,5 +40,20 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
         return response()->json(['message' => 'Category deleted successfully']);
+    }
+
+    
+    public function stats(){
+        $categoriesTotal = Category::count();
+
+        $booksTotal = Book::count();
+
+        $evarage = $booksTotal/$categoriesTotal;
+
+        return response()->json([
+            'categoriesTotal' => $categoriesTotal,
+            'booksTotal' => $booksTotal,
+            'evarage' => $evarage
+        ]);
     }
 }

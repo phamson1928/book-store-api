@@ -44,19 +44,19 @@ class DashBoardController extends Controller
             : 100;
 
         return response()->json([
-            'revenue' => [
+            'revenueThisMonth' => [
                 'value' => $revenueThisMonth,
                 'change' => round($revenueChange, 2)
             ],
-            'books' => [
+            'booksTotal' => [
                 'value' => $totalBooks,
                 'change' => null
             ],
-            'orders_today' => [
+            'ordersToday' => [
                 'value' => $ordersToday,
                 'change' => null
             ],
-            'new_users' => [
+            'newUsers' => [
                 'value' => $newUsersThisMonth,
                 'change' => round($userChange, 2)
             ]
