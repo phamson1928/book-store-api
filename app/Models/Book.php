@@ -29,6 +29,11 @@ class Book extends Model
         'form',
         'state',
     ];
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function author()
     {
         return $this->belongsTo(Author::class);

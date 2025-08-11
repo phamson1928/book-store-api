@@ -11,7 +11,7 @@ class UserController extends Controller
         $adminUsers = User::where('role','admin')->count();
         $userUsers = User::where('role','user')->count();
         $newUsers = User::whereDate('created_at',today())->count(); 
-        
+
         return response()->json([
             'onlineUsers' => $onlineUsers,
             'adminUsers' => $adminUsers,
@@ -19,7 +19,14 @@ class UserController extends Controller
             'newUsers' => $newUsers
         ]);
     }
+    
     public function index(){
         return response()->json(User::all());
+    }
+
+    public function delete($id){
+        $user = User::findOrFail($id);
+        $user->delete();
+        return response()->json(['message' => 'User deleted successfully']);
     }
 }
