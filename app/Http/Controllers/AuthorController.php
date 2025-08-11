@@ -32,7 +32,9 @@ class AuthorController extends Controller
     public function show($id)
 {
     $author = Author::withCount('books')
-        ->with('books')
+        ->with(['books' => function($query){
+            $query -> select('id', 'author_id', 'title', 'price', 'discount_price');
+        }])
         ->findOrFail($id);
 
     return response()->json([
@@ -40,7 +42,8 @@ class AuthorController extends Controller
             'id' => $author->id,
             'name' => $author->name,
             'booksCount' => $author->books_count,
-            'books' => $author->books
+            'books' => $author->books,
+            'joiningYear' => $author-> created_at
         ]
     ]);
 }
