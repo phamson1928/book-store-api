@@ -48,12 +48,12 @@ class CategoryController extends Controller
 
         $booksTotal = Book::count();
 
-        $evarage = $booksTotal/$categoriesTotal;
+        $average = $booksTotal/$categoriesTotal;
 
         return response()->json([
             'categoriesTotal' => $categoriesTotal,
             'booksTotal' => $booksTotal,
-            'evarage' => $evarage
+            'average' => $average
         ]);
     }
 }

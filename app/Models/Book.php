@@ -12,7 +12,6 @@ class Book extends Model
 
     protected $fillable = [
         'title',
-        'author',
         'author_id',
         'price',
         'image',
@@ -39,9 +38,6 @@ class Book extends Model
         return $this->belongsTo(Author::class);
     }
 
-    /**
-     * Get the category that owns the book.
-     */
     public function category()
     {
         return $this->belongsTo(Category::class);

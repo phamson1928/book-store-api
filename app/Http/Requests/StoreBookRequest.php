@@ -23,7 +23,6 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'author' => 'nullable|string|max:255',
             'author_id' => 'nullable|exists:authors,id',
             'price' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -68,9 +67,8 @@ class StoreBookRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            // Ensure at least one of author or author_id is provided
-            if (!$this->author && !$this->author_id) {
-                $validator->errors()->add('author', 'Phải cung cấp tên tác giả hoặc ID tác giả.');
+            if (!$this->author_id) {
+                $validator->errors()->add('author_id', 'Phải cung cấp ID tác giả.');
             }
         });
     }
