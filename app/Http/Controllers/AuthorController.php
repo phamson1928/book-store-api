@@ -30,10 +30,21 @@ class AuthorController extends Controller
     }
 
     public function show($id)
-    {
-        $author = Author::with('books')->findOrFail($id);
-        return response()->json($author);
-    }
+{
+    $author = Author::withCount('books')
+        ->with('books')
+        ->findOrFail($id);
+
+    return response()->json([
+        'author' => [
+            'id' => $author->id,
+            'name' => $author->name,
+            'booksCount' => $author->books_count,
+            'books' => $author->books
+        ]
+    ]);
+}
+
 
     public function update(UpdateAuthorRequest $request, $id)
     {
