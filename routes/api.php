@@ -59,6 +59,10 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware('checkAdmin')->group(function () {
+        //CRUD Người dùng
+        Route::get('/user-stats', [Usercontroller::class, 'stats']);
+        Route::get('/user-index', [Usercontroller::class, 'index']);
+        Route::delete('/user-delete', [Usercontroller::class, 'delete']);
 
         // CRUD Sách
         Route::post('/books', [BookController::class, 'store']);
