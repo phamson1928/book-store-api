@@ -22,6 +22,8 @@ use App\Http\Controllers\{
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // Danh sách public
 Route::get('/books', [BookController::class, 'index']);
