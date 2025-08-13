@@ -27,15 +27,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/books', [BookController::class, 'index']);
 Route::get('/books/{id}', [BookController::class, 'show']);
 
-Route::get('/authors', [AuthorController::class, 'index']);
 Route::get('/authors/{id}', [AuthorController::class, 'show']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
-
-Route::get('/orders', [OrderController::class, 'index']);
-Route::get('/orders/{id}', [OrderController::class, 'show']);
-
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +55,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy']);
     Route::delete('/cart', [CartController::class, 'clear']);
 
-
+    //Đặt đơn hàng
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    
     /*
     |--------------------------------------------------------------------------
     | Admin Routes (Cần quyền admin)
@@ -78,6 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/books/{id}', [BookController::class, 'destroy']);
 
         // CRUD Tác giả
+        Route::get('/authors', [AuthorController::class, 'index']);
         Route::post('/authors', [AuthorController::class, 'store']);
         Route::put('/authors/{id}', [AuthorController::class, 'update']);
         Route::delete('/authors/{id}', [AuthorController::class, 'destroy']);
@@ -88,7 +88,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
         // CRUD Đơn hàng
-        Route::post('/orders', [OrderController::class, 'store']);
         Route::put('/orders/{id}', [OrderController::class, 'update']);
         Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 

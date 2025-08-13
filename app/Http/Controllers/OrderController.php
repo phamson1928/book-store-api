@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Book;
-use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Cart;
 
 class OrderController extends Controller
 {
@@ -19,56 +17,59 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    public function store(StoreOrderRequest $request)
+    public function store()
     {
-        $data = $request->validated();
+        $user = Auth::user();
+
+        // Lấy giỏ hàng
+        $cart = Cart::with('items.book')->where('user_id', $user->id)->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return response()->json(['error' => 'Giỏ hàng trống'], 400);
+        }
 
         DB::beginTransaction();
-        
         try {
-            // Tính tổng số lượng và tổng tiền
+            // Tính tổng tiền
             $totalQuantity = 0;
             $totalCost = 0;
-            
-            foreach ($data['items'] as $item) {
-                $book = Book::findOrFail($item['book_id']);
-                $price = $book->discount_price ?? $book->price;
-                $totalQuantity += $item['quantity'];
-                $totalCost += $price * $item['quantity'];
+
+            foreach ($cart->items as $item) {
+                $price = $item->book->discount_price ?? $item->book->price;
+                $totalQuantity += $item->quantity;
+                $totalCost += $price * $item->quantity;
             }
 
             // Tạo đơn hàng
             $order = Order::create([
-                'user_id' => Auth::id(),
-                'address' => $data['address'],
-                'quantity' => $totalQuantity,
+                'user_id' => $user->id,
+                'total_quantity' => $totalQuantity,
                 'total_cost' => $totalCost,
-                'state' => 'pending',
+                'status' => 'pending',
             ]);
 
-            // Tạo order items
-            foreach ($data['items'] as $item) {
-                $book = Book::findOrFail($item['book_id']);
-                $price = $book->discount_price ?? $book->price;
-                
+            // Tạo chi tiết đơn hàng
+            foreach ($cart->items as $item) {
+                $price = $item->book->discount_price ?? $item->book->price;
+
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'book_id' => $item['book_id'],
-                    'quantity' => $item['quantity'],
+                    'book_id' => $item->book_id,
+                    'quantity' => $item->quantity,
                     'price' => $price,
                 ]);
             }
 
+            // Xóa giỏ hàng
+            $cart->items()->delete();
+
             DB::commit();
-            
-            // Load relationships for response
-            $order->load(['orderItems.book', 'user']);
-            
-            return response()->json($order, 201);
-            
+
+            return response()->json(['message' => 'Đặt hàng thành công', 'order' => $order]);
+
         } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to create order'], 500);
+            DB::rollBack();
+            return response()->json(['error' => 'Lỗi khi đặt hàng', 'details' => $e->getMessage()], 500);
         }
     }
 
