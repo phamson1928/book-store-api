@@ -9,20 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('last_login_at')->nullable();
-        });
-    }
+    public function up()
+{
+    Schema::create('carts', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->timestamps();
+    });
+}
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('last_login_at');
-        });
+        Schema::dropIfExists('carts');
     }
 };

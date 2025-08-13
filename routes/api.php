@@ -9,7 +9,8 @@ use App\Http\Controllers\{
     OrderController,
     DashboardController,
     PingController,
-    UserController
+    UserController,
+    CartController
 };
 
 /*
@@ -51,6 +52,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Ping cập nhật trạng thái online
     Route::post('/ping', [PingController::class, 'ping']);
+
+    // Quản lý giỏ hàng
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart', [CartController::class, 'store']);
+    Route::put('/cart/{id}', [CartController::class, 'update']);
+    Route::delete('/cart/{id}', [CartController::class, 'destroy']);
+    Route::delete('/cart', [CartController::class, 'clear']);
 
 
     /*
