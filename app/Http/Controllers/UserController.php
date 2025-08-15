@@ -24,7 +24,7 @@ class UserController extends Controller
         return response()->json(User::all());
     }
 
-    public function delete($id){
+    public function destroy($id){
         $user = User::findOrFail($id);
         $user->delete();
         return response()->json(['message' => 'User deleted successfully']);

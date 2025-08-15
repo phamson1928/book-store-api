@@ -29,9 +29,7 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, $id)
     {
-        $category = Category::findOrFail($id);
-        $data = $request->validated();
-        $category->update($data);
+        $category = Category::findOrFail($id)->update($request->validated());
         return response()->json($category);
     }
 
@@ -48,7 +46,7 @@ class CategoryController extends Controller
 
         $booksTotal = Book::count();
 
-        $average = $booksTotal/$categoriesTotal;
+        $average = $categoriesTotal > 0 ? $booksTotal / $categoriesTotal : 0;
 
         return response()->json([
             'categoriesTotal' => $categoriesTotal,

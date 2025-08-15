@@ -36,7 +36,7 @@ class StoreBookRequest extends FormRequest
             'packaging_size_cm' => 'required|string|max:50',
             'number_of_pages' => 'required|integer|min:1',
             'form' => 'required|string|max:100',
-            'state' => 'required|in:available,out_of_stock',
+            'state' => 'required|in:Còn hàng,Hết hàng, Đang về hàng',
         ];
     }
 

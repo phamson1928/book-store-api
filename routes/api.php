@@ -69,9 +69,8 @@ Route::middleware('auth:sanctum')->group(function () {
     */
     Route::middleware('checkAdmin')->group(function () {
         //CRUD Người dùng
-        Route::get('/user-stats', [Usercontroller::class, 'stats']);
         Route::get('/user-index', [Usercontroller::class, 'index']);
-        Route::delete('/user-delete', [Usercontroller::class, 'delete']);
+        Route::delete('/user-delete/{id}', [Usercontroller::class, 'destroy']);
 
         // CRUD Sách
         Route::post('/books', [BookController::class, 'store']);
@@ -94,10 +93,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 
         // Thống kê Dashboard
-        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
-        Route::get('/categories/stats', [CategoryController::class, 'stats']);
-        Route::get('/authors/stats', [AuthorController::class, 'stats']);
-        Route::get('/orders/stats', [OrderController::class, 'stats']);
-        Route::get('/users/stats', [UserController::class, 'stats']);
+        Route::get('/dashboard-stats', [DashboardController::class, 'stats']);
+        Route::get('/categories-stats', [CategoryController::class, 'stats']);
+        Route::get('/authors-stats', [AuthorController::class, 'stats']);
+        Route::get('/orders-stats', [OrderController::class, 'stats']);
+        Route::get('/users-stats', [UserController::class, 'stats']);
     });
 });
