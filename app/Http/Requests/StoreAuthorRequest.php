@@ -22,9 +22,11 @@ class StoreAuthorRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'age' => 'required|integer|min:1|max:150',
-            'gender' => 'required|string|in:male,female,other',
+            'gender' => 'required|string|in:Nam,Nữ',
             'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'description' => 'required|string|max:1000',
+            'nationality' => 'required|string',
+            'total_work' => 'required|integer'
         ];
     }
 

@@ -20,11 +20,13 @@ class UpdateAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
-            'age' => 'sometimes|required|integer|min:1|max:150',
-            'gender' => 'sometimes|required|string|in:male,female,other',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'description' => 'sometimes|required|string|max:1000',
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer|min:1|max:150',
+            'gender' => 'required|string|in:Nam,Nữ',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'description' => 'required|string|max:1000',
+            'nationality' => 'required|string',
+            'total_work' => 'required|integer'
         ];
     }
 
