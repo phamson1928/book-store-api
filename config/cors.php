@@ -15,11 +15,11 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie','storage/*'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'], // Trong production, thay bằng domain cụ thể như ['http://localhost:3000', 'https://yourdomain.com']
+    'allowed_origins' => ['http://localhost:5173'], // Trong production, thay bằng domain cụ thể như ['http://localhost:3000', 'https://yourdomain.com']
 
     'allowed_origins_patterns' => [],
 
