@@ -23,7 +23,8 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'author_id' => 'nullable|exists:authors,id',
+            'author_id' => 'nullable',
+            'author' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'publication_date' => 'required|date',
@@ -31,12 +32,12 @@ class StoreBookRequest extends FormRequest
             'language' => 'required|string|max:100',
             'category_id' => 'required|exists:categories,id',
             'discount_price' => 'nullable|numeric|min:0|lt:price',
-            'new_best_seller' => 'required|boolean',
+            // 'new_best_seller' => 'required|boolean',
             'weight_in_grams' => 'required|integer|min:1',
             'packaging_size_cm' => 'required|string|max:50',
             'number_of_pages' => 'required|integer|min:1',
-            'form' => 'required|string|max:100',
-            'state' => 'required|in:Còn hàng,Hết hàng, Đang về hàng',
+            'form' => 'required|string',
+            'state' => 'required|in:Còn hàng,Hết hàng,Sắp có',
         ];
     }
 
@@ -57,7 +58,7 @@ class StoreBookRequest extends FormRequest
             'category_id.exists' => 'Thể loại sách không tồn tại.',
             'author_id.exists' => 'Tác giả không tồn tại.',
             'discount_price.lt' => 'Giá khuyến mãi phải nhỏ hơn giá gốc.',
-            'state.in' => 'Trạng thái sách phải là: available hoặc out_of_stock.',
+            'state.in' => 'Trạng thái sách.',
         ];
     }
 
@@ -66,10 +67,10 @@ class StoreBookRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
-            if (!$this->author_id) {
-                $validator->errors()->add('author_id', 'Phải cung cấp ID tác giả.');
-            }
-        });
+        // $validator->after(function ($validator) {
+        //     if (!$this->author_id) {
+        //         $validator->errors()->add('author_id', 'Phải cung cấp ID tác giả.');
+        //     }
+        // });
     }
 }
