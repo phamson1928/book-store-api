@@ -36,7 +36,7 @@ class BookController extends Controller
 
     public function update(UpdateBookRequest $request, $id)
     {
-        $book = Book::with('author','category')->findOrFail($id);
+        $book = Book::with('category')->findOrFail($id);
         $data = $request->validated();
         
         // Xử lý hình ảnh

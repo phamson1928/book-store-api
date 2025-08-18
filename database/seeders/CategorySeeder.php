@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Category;
+use Illuminate\Support\Facades\DB;
+
 
 class CategorySeeder extends Seeder
 {
@@ -13,51 +13,39 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('categories')->delete();
         $categories = [
-            [
-                'name' => 'Fiction',
-                'description' => 'Fictional stories and novels'
+             [
+                'id' => 3,
+                'name' => 'Tiểu thuyết & Văn học',
+                'description' => 'Nơi tập hợp những tác phẩm kinh điển và hiện đại, từ tiểu thuyết trinh thám, phiêu lưu, đến các tác phẩm văn học kinh điển của thế giới.',
             ],
             [
-                'name' => 'Non-Fiction',
-                'description' => 'Factual books and real-life stories'
+                'id' => 5,
+                'name' => 'Công nghệ & Khoa học',
+                'description' => 'Sách về lập trình, công nghệ thông tin, phát triển phần mềm, khoa học vũ trụ, và những kiến thức giúp bạn khám phá thế giới hiện đại.',
             ],
             [
-                'name' => 'Science Fiction',
-                'description' => 'Science fiction and fantasy novels'
+                'id' => 6,
+                'name' => 'Lịch sử & Nhân loại học',
+                'description' => 'Những cuốn sách giúp bạn tìm hiểu lịch sử phát triển của loài người, các nền văn minh và những thay đổi đã làm nên thế giới ngày nay.',
             ],
             [
-                'name' => 'Romance',
-                'description' => 'Romance novels and love stories'
+                'id' => 7,
+                'name' => 'Kinh doanh & Phát triển bản thân',
+                'description' => 'Các đầu sách truyền cảm hứng, phát triển tư duy, khởi nghiệp và quản trị, giúp bạn đạt được thành công trong công việc và cuộc sống.',
             ],
             [
-                'name' => 'Mystery',
-                'description' => 'Mystery and thriller books'
+                'id' => 8,
+                'name' => 'Sách Thiếu nhi',
+                'description' => 'Những tác phẩm văn học và truyện tranh phù hợp cho trẻ em, nuôi dưỡng trí tưởng tượng và giáo dục nhân cách.',
             ],
             [
-                'name' => 'Biography',
-                'description' => 'Biographies and autobiographies'
+                'id' => 9,
+                'name' => 'Tâm lý & Kỹ năng sống',
+                'description' => 'Bộ sưu tập sách giúp bạn rèn luyện kỹ năng giao tiếp, thấu hiểu bản thân, và tạo động lực trong cuộc sống.',
             ],
-            [
-                'name' => 'Self-Help',
-                'description' => 'Self-improvement and personal development books'
-            ],
-            [
-                'name' => 'History',
-                'description' => 'Historical books and documentaries'
-            ],
-            [
-                'name' => 'Technology',
-                'description' => 'Technology and programming books'
-            ],
-            [
-                'name' => 'Business',
-                'description' => 'Business and entrepreneurship books'
-            ]
         ];
-
-        foreach ($categories as $category) {
-            Category::create($category);
-        }
+        DB::table('categories')->insert($categories);
     }
 }
