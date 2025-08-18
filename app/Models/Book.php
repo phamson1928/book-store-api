@@ -33,10 +33,10 @@ class Book extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function author()
-    {
-        return $this->belongsTo(Author::class);
-    }
+    // public function author()
+    // {
+    //     return $this->belongsTo(Author::class);
+    // }
 
     public function category()
     {

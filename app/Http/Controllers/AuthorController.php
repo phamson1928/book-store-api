@@ -11,7 +11,7 @@ class AuthorController extends Controller
 {
     public function index()
     {
-        $authors = Author::withCount('books')->get();
+        $authors = Author::all();
         return response()->json($authors);
     }
 
