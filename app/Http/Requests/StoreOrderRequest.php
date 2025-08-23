@@ -20,10 +20,9 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address' => 'required|string|max:500',
-            'items' => 'required|array|min:1',
-            'items.*.book_id' => 'required|exists:books,id',
-            'items.*.quantity' => 'required|integer|min:1|max:100',
+            'phone'          => 'required|string|max:20',
+            'address'        => 'required|string|max:255',
+            
         ];
     }
 

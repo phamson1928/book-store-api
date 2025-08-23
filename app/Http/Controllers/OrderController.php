@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Http\Requests\UpdateOrderRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\Cart;
+use Illuminate\Support\Facades\DB;
+
 
 class OrderController extends Controller
 {
@@ -17,61 +19,60 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    public function store()
-    {
-        $user = Auth::user();
-
-        // Lấy giỏ hàng
-        $cart = Cart::with('items.book')->where('user_id', $user->id)->first();
-
-        if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['error' => 'Giỏ hàng trống'], 400);
-        }
-
-        DB::beginTransaction();
-        try {
-            // Tính tổng tiền
-            $totalQuantity = 0;
-            $totalCost = 0;
-
-            foreach ($cart->items as $item) {
-                $price = $item->book->discount_price ?? $item->book->price;
-                $totalQuantity += $item->quantity;
-                $totalCost += $price * $item->quantity;
-            }
-
-            // Tạo đơn hàng
-            $order = Order::create([
-                'user_id' => $user->id,
-                'total_quantity' => $totalQuantity,
-                'total_cost' => $totalCost,
-                'status' => 'pending',
-            ]);
-
-            // Tạo chi tiết đơn hàng
-            foreach ($cart->items as $item) {
-                $price = $item->book->discount_price ?? $item->book->price;
-
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'book_id' => $item->book_id,
-                    'quantity' => $item->quantity,
-                    'price' => $price,
-                ]);
-            }
-
-            // Xóa giỏ hàng
-            $cart->items()->delete();
-
-            DB::commit();
-
-            return response()->json(['message' => 'Đặt hàng thành công', 'order' => $order]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Lỗi khi đặt hàng', 'details' => $e->getMessage()], 500);
-        }
+    public function store(Request $request)
+{
+    $userId = Auth::id();
+    if (!$userId) {
+        return response()->json(['error' => 'Unauthenticated'], 401);
     }
+
+    $cart = Cart::with('items.book')->where('user_id', $userId)->first();
+    if (!$cart || $cart->items->isEmpty()) {
+        return response()->json(['error' => 'Giỏ hàng trống'], 400);
+    }
+
+    return DB::transaction(function () use ($request, $cart, $userId) {
+        $totalQuantity = 0;
+        $totalCost = 0;
+
+        foreach ($cart->items as $item) {
+            if (!$item->book) {
+                return response()->json(['error' => 'Sản phẩm không còn tồn tại'], 400);
+            }
+            $price = $item->book->discount_price ?? $item->book->price;
+            $totalQuantity += $item->quantity;
+            $totalCost += $price * $item->quantity;
+        }
+
+        $order = Order::create([
+            'user_id'        => $userId,
+            'payment_method' => $request->input('payment_method'),
+            'phone'          => $request->input('phone'),
+            'address'        => $request->input('address'),
+            'total_cost'     => $totalCost,
+            'quantity' => $totalQuantity,
+            'state'         => 'pending',
+            'payment_status' => 'Chưa thanh toán',
+        ]);
+
+        foreach ($cart->items as $item) {
+            $price = $item->book->discount_price ?? $item->book->price;
+            OrderItem::create([
+                'order_id' => $order->id,
+                'book_id'  => $item->book_id,
+                'quantity' => $item->quantity,
+                'price'    => $price,
+            ]);
+        }
+
+        $cart->items()->delete(); // hoặc $cart->delete();
+
+        return response()->json([
+            'message' => 'Đặt hàng thành công!',
+            'order'   => $order->load('orderItems.book'), // hoặc 'items.book' nếu bạn đặt alias
+        ]);
+    });
+}
 
     public function show($id)
     {
