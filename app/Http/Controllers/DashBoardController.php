@@ -19,11 +19,11 @@ class DashBoardController extends Controller
 
         // Doanh thu tháng này
         $revenueThisMonth = Order::whereBetween('created_at', [$startOfMonth, $now])
-            ->sum('total_price');
+            ->where('state','Đã giao')->sum('total_price');
 
         // Doanh thu tháng trước
         $revenueLastMonth = Order::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
-            ->sum('total_price');
+            ->where('state','Đã giao')->sum('total_price');
 
         // % thay đổi doanh thu
         $revenueChange = $revenueLastMonth > 0
