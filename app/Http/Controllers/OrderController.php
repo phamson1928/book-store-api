@@ -51,7 +51,7 @@ class OrderController extends Controller
             'address'        => $request->input('address'),
             'total_cost'     => $totalCost,
             'quantity' => $totalQuantity,
-            'state'         => 'pending',
+            'state'         => 'Chờ xác nhận',
             'payment_status' => 'Chưa thanh toán',
         ]);
 
@@ -102,10 +102,10 @@ class OrderController extends Controller
     }
 
     public function stats(){
-        $orderTotal = Order::all()->count();
+        $orderTotal = Order::count();
         $deliveredOrder = Order::where('state','delivered')->count();
         $pendingOrder = Order::where('state','pending')->count();
-        $totalRevenue = Order::sum('totalCost');
+        $totalRevenue = Order::sum('total_cost');
         return response()->json([
             'orderTotal' => $orderTotal,
             'deliveredOrder' => $deliveredOrder,
