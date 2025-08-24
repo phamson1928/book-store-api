@@ -21,7 +21,7 @@ class UpdateOrderRequest extends FormRequest
     {
         return [
             'address' => 'sometimes|required|string|max:500',
-            'state' => 'sometimes|required|string|in:pending,confirmed,shipping,delivered,cancelled',
+            'state' => 'sometimes|required|string|in:Chờ xác nhận,Đang xử lý,Đã giao,Đã hủy',
         ];
     }
 
@@ -34,7 +34,7 @@ class UpdateOrderRequest extends FormRequest
             'address.required' => 'Địa chỉ giao hàng là bắt buộc.',
             'address.max' => 'Địa chỉ không được vượt quá 500 ký tự.',
             'state.required' => 'Trạng thái đơn hàng là bắt buộc.',
-            'state.in' => 'Trạng thái phải là: pending, confirmed, shipping, delivered, hoặc cancelled.',
+            'state.in' => 'Trạng thái phải hợp lệ.',
         ];
     }
 }
