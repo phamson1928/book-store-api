@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Order;
 use App\Models\User;
@@ -43,6 +43,20 @@ class DashBoardController extends Controller
             ? (($newUsersThisMonth - $newUsersLastMonth) / $newUsersLastMonth) * 100
             : 100;
 
+        //Doanh thu từng tháng
+        $revenueByMonth = DB::table('orders')
+            ->select(
+                DB::raw('YEAR(created_at) as year'),
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('SUM(total_price) as revenue')
+            )
+            ->where('state', 'Đã giao')
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
+
+
         return response()->json([
             'revenueThisMonth' => [
                 'value' => $revenueThisMonth,
@@ -59,7 +73,11 @@ class DashBoardController extends Controller
             'newUsers' => [
                 'value' => $newUsersThisMonth,
                 'change' => round($userChange, 2)
-            ]
+            ],
+            'revenueByMonth' =>[
+                'value' => $revenueByMonth,
+                'change' => null
+            ],
         ]);
     }
 }
