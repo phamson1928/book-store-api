@@ -103,8 +103,8 @@ class OrderController extends Controller
 
     public function stats(){
         $orderTotal = Order::count();
-        $deliveredOrder = Order::where('state','delivered')->count();
-        $pendingOrder = Order::where('state','pending')->count();
+        $deliveredOrder = Order::where('state','Đã giao')->count();
+        $pendingOrder = Order::where('state','Chờ xác nhận')->count();
         $totalRevenue = Order::sum('total_cost');
         return response()->json([
             'orderTotal' => $orderTotal,
