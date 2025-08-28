@@ -31,21 +31,9 @@ class AuthorController extends Controller
 
     public function show($id)
 {
-    $author = Author::withCount('books')
-        ->with(['books' => function($query){
-            $query -> select('id', 'author_id', 'title', 'price', 'discount_price');
-        }])
-        ->findOrFail($id);
+    $author = Author::findOrFail($id);
 
-    return response()->json([
-        'author' => [
-            'id' => $author->id,
-            'name' => $author->name,
-            'booksCount' => $author->books_count,
-            'books' => $author->books,
-            'joiningYear' => $author-> created_at
-        ]
-    ]);
+    return response()->json($author);
 }
 
 

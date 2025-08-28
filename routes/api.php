@@ -29,7 +29,7 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/books', [BookController::class, 'index']);
 Route::get('/books/{id}', [BookController::class, 'show']);
 
-// Route::get('/authors/{id}', [AuthorController::class, 'show']);
+Route::get('/authors/{id}', [AuthorController::class, 'show']);
 Route::get('/authors', [AuthorController::class, 'index']);
 
 Route::get('/categories', [CategoryController::class, 'index']);

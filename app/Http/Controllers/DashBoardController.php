@@ -33,8 +33,6 @@ class DashBoardController extends Controller
         // Tổng sách
         $totalBooks = Book::count();
 
-        
-
         // Người dùng mới tháng này
         $newUsersThisMonth = User::whereBetween('created_at', [$startOfMonth, $now])->count();
         $newUsersLastMonth = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
