@@ -21,7 +21,7 @@ class UpdateOrderRequest extends FormRequest
     {
         return [
             'address' => 'sometimes|required|string|max:500',
-            'state' => 'sometimes|required|string|in:Chờ xác nhận,Đang xử lý,Đã giao,Đã hủy',
+            'state' => 'sometimes|required|string|in:Chờ xác nhận,Đang vận chuyển,Đã giao,Đã hủy',
         ];
     }
 

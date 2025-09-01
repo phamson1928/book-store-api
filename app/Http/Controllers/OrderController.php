@@ -65,11 +65,11 @@ class OrderController extends Controller
             ]);
         }
 
-        $cart->items()->delete(); // hoặc $cart->delete();
+        $cart->items()->delete(); 
 
         return response()->json([
             'message' => 'Đặt hàng thành công!',
-            'order'   => $order->load('orderItems.book'), // hoặc 'items.book' nếu bạn đặt alias
+            'order'   => $order->load('orderItems.book'),
         ]);
     });
 }
@@ -80,11 +80,21 @@ class OrderController extends Controller
         return response()->json($order);
     }
 
+    public function showByUser()
+    {
+        $userId = Auth::id();
+        $orders = Order::with(['orderItems.book', 'user'])->where('user_id', $userId)->get();
+        return response()->json($orders);
+    }
+
     public function update(UpdateOrderRequest $request, $id)
     {
         $data = $request->validated();
 
         $order = Order::findOrFail($id);
+        if ($order->state == 'Đã giao') {
+            $data['payment_status'] = 'Đã thanh toán';
+        }
         $order->update($data);
         
         return response()->json([
