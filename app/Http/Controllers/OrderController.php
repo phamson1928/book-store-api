@@ -123,4 +123,12 @@ class OrderController extends Controller
             'totalRevenue' => $totalRevenue
         ]);
     }
+
+    public function giveChangeOrderInfor(Request $request, $id){
+        $order = Order::findOrFail($id);
+        return response()->json([
+            'order_id' => $order->id,
+            'note' => $request->note
+        ]);
+    }
 }
