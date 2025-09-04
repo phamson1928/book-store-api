@@ -63,7 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::get('/orders', [OrderController::class, 'showByUser']);
-    Route::post('/orders/{id}', [OrderController::class, 'giveChangeOrderInfor']);
     
     /*
     |--------------------------------------------------------------------------

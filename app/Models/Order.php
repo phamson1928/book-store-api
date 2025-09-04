@@ -17,4 +17,7 @@ class Order extends Model
     public function orderItems(){
         return $this->hasMany(OrderItem::class);
     }
+    public function orderChangeRequest(){
+        return  $this->hasOne(OrderChangeRequest::class);
+    }
 }

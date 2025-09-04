@@ -4,10 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Order;
+use App\Models\OrderChangeRequest;
 
 class User extends Authenticatable
 {
@@ -16,6 +17,9 @@ class User extends Authenticatable
 
     public function orders(){
         return $this->hasMany(Order::class);
+    }
+    public function orderChangeRequests(){
+        return $this->hasMany(OrderChangeRequest::class);
     }
     /**
      * The attributes that are mass assignable.
