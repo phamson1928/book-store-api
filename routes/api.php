@@ -10,7 +10,8 @@ use App\Http\Controllers\{
     DashboardController,
     PingController,
     UserController,
-    CartController
+    CartController,
+    OrderChangeRequestController
 };
 
 /*
@@ -63,6 +64,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::get('/orders', [OrderController::class, 'showByUser']);
+
+    //Gửi yêu cầu thay đổi đơn hàng
+    Route::post('/orders/{id}/change-requests', [OrderChangeRequestController::class, 'store']);
+    //Thông báo phản hồi thay đổi thông tin đơn hàng
+    Route::get('/order-change-requests/{id}', [OrderChangeRequestController::class, 'showAdminResponse']);
     
     /*
     |--------------------------------------------------------------------------
@@ -99,5 +105,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/authors-stats', [AuthorController::class, 'stats']);
         Route::get('/orders-stats', [OrderController::class, 'stats']);
         Route::get('/users-stats', [UserController::class, 'stats']);
+
+        // Thông tin yêu cầu thay đổi
+        Route::get('/order-change-requests', [OrderChangeRequestController::class, 'index']);
+        Route::put('/order-change-requests/{id}', [OrderChangeRequestController::class, 'updateAdminResponse']);
     });
 });
