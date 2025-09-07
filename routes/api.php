@@ -109,5 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Thông tin yêu cầu thay đổi
         Route::get('/order-change-requests', [OrderChangeRequestController::class, 'index']);
         Route::put('/order-change-requests/{id}', [OrderChangeRequestController::class, 'updateAdminResponse']);
+        Route::delete('/order-change-requests/{id}', [OrderChangeRequestController::class, 'destroy']);
+        Route::delete('/order-change-requests/delete-all', [OrderChangeRequestController::class, 'destroyAll']);
     });
 });

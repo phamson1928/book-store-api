@@ -55,4 +55,19 @@ class OrderChangeRequestController extends Controller
             'data' => $changeRequest
         ], 200);
     }
+
+    public function destroy($id)
+    {
+        OrderChangeRequest::where('id', $id)->delete();
+        return response()->json([
+            'message' => 'Xóa yêu cầu thành công.',
+        ], 200);
+    }
+
+    public function destroyAll(){
+        OrderChangeRequest::where('status','Hoàn thành')->where('status','Đã từ chối')->delete();
+        return response()->json([
+            'message' => 'Xóa tất cả yêu cầu thành công.',
+        ], 200);
+    }
 }
