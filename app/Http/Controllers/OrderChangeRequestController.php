@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOrderChangeRequest;
 use App\Http\Requests\UpdateOrderChangeRequest;
 use App\Models\Order;
+use App\Models\Notification;
 
 class OrderChangeRequestController extends Controller
 {
@@ -14,6 +15,14 @@ class OrderChangeRequestController extends Controller
     {
         $data = OrderChangeRequest::with('user')->get();
         return response()->json($data);
+    }
+
+    public function show($id)
+    {
+        $data = OrderChangeRequest::where('order_id', $id)->value('admin_response');
+        return response()->json([
+            'admin_response' => $data
+        ]);
     }
 
     public function store(StoreOrderChangeRequest $request, $id){
@@ -29,16 +38,15 @@ class OrderChangeRequestController extends Controller
             'note' => $request->note,
         ]);
 
+        Notification::create([
+            'user_id' => $changeRequest->user_id,
+            'message' => 'Bạn đã gửi yêu cầu thay đổi thông tin đơn hàng',
+        ]);
+
         return response()->json([
             'message' => 'Yêu cầu đã được gửi tới admin.',
             'data' => $changeRequest
         ], 201);
-    }
-
-    public function showAdminResponse($id)
-    {
-        $data = OrderChangeRequest::where($id,Auth::id())->select('status','admin_response')->with('order')->get();
-        return response()->json($data);
     }
 
     public function updateAdminResponse(UpdateOrderChangeRequest $request, $id)
@@ -49,6 +57,19 @@ class OrderChangeRequestController extends Controller
             'admin_response' => $request->admin_response,
             'status' => $request->status,
         ]);
+
+        if ('status' == 'Hoàn thành'){
+            Notification::create([
+                'user_id' => $changeRequest->user_id,
+                'message' => 'Admin đã cập nhật yêu cầu thay đổi thông tin đơn hàng của bạn',
+            ]);
+        }
+        else if ('status' == 'Đã từ chối'){
+            Notification::create([
+                'user_id' => $changeRequest->user_id,
+                'message' => 'Admin đã từ chối yêu cầu thay đổi thông tin đơn hàng của bạn. Chi tiết liên hệ qua số hotline',
+            ]);
+        }
 
         return response()->json([
             'message' => 'Cập nhật yêu cầu thành công.',

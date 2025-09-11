@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
+use App\Models\Notification;
 
 
 class OrderController extends Controller
@@ -67,6 +68,11 @@ class OrderController extends Controller
 
         $cart->items()->delete(); 
 
+        Notification::create([
+            'user_id' => $userId,
+            'message' => 'Đơn hàng #' . $order->id . ' đã được tạo thành công. Vui lòng đợi người quản trị duyệt đơn của bạn',
+        ]);
+
         return response()->json([
             'message' => 'Đặt hàng thành công!',
             'order'   => $order->load('orderItems.book'),
@@ -96,6 +102,31 @@ class OrderController extends Controller
             $data['payment_status'] = 'Đã thanh toán';
         }
         $order->update($data);
+
+        if ($order->state == 'Đã giao') {
+            Notification::create([
+                'user_id' => $order->user_id,
+                'message' => 'Đơn hàng #' . $order->id . ' đã được giao thành công. Vui lòng check lịch sử đơn hàng để kiểm tra',
+            ]);
+        }
+        if ($order->state == 'Đã hủy') {
+            Notification::create([
+                'user_id' => $order->user_id,
+                'message' => 'Đơn hàng #' . $order->id . ' đã bị hủy. Vui lòng check lịch sử đơn hàng để kiểm tra, hoặc liên hệ admin để biết thêm chi tiết',
+            ]);
+        }
+        if ($order->state == 'Chờ xác nhận') {
+            Notification::create([
+                'user_id' => $order->user_id,
+                'message' => 'Đơn hàng #' . $order->id . ' đã được xác nhận. Vui lòng check lịch sử đơn hàng để kiểm tra',
+            ]);
+        }
+        if ($order->state == 'Đang vận chuyển') {
+            Notification::create([
+                'user_id' => $order->user_id,
+                'message' => 'Đơn hàng #' . $order->id . ' đã được chuyển qua đơn vị vận chuyển. Vui lòng check lịch sử đơn hàng để kiểm tra',
+            ]);
+        }
         
         return response()->json([
             'message' => 'Cập nhật đơn hàng thành công',

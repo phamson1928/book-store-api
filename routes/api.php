@@ -67,8 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Gửi yêu cầu thay đổi đơn hàng
     Route::post('/orders/{id}/change-requests', [OrderChangeRequestController::class, 'store']);
-    //Thông báo phản hồi thay đổi thông tin đơn hàng
-    Route::get('/order-change-requests/{id}', [OrderChangeRequestController::class, 'showAdminResponse']);
+    Route::get('/orders/{id}/change-requests', [OrderChangeRequestController::class, 'show']);
     
     /*
     |--------------------------------------------------------------------------
