@@ -8,35 +8,59 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function showForAdmin()
     {
-
+        $data = Notification::where('type', 'admin')->select('id','message','created_at','updated_at')->orderBy('created_at', 'desc')->get();
+        return response()->json($data);
     }
 
-    public function store(Request $request)
+    public function storeByAdmin(Request $request)
     {
         $data = Notification::create([
-            'user_id' => Auth::id(),
+            'user_id' => null,
             'message' => $request->message,
+            'type' => 'admin'
         ]);
-        return response()->json($data);
+        return response()->json([
+        'status' => 'success',
+        'message' => 'Thông báo đã được tạo thành công',
+        'data' => $data
+    ], 201);
+
     }
 
     public function showForUser()
+{
+    $data = Notification::where('is_read', false)
+        ->where(function ($q) {
+            $q->where('user_id', Auth::id())
+              ->orWhereNull('user_id');
+        })
+        ->select('message','type')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json($data);
+}
+
+    public function destroyByAdmin($id)
     {
-        $data = Notification::where('id', Auth::id())->where('is_read', false)->select('message')->get();
-        return response()->json($data);
+        Notification::where('id', $id)->where('type','admin')->delete();
+        return response()->json(['message' => 'Đã xóa thành công']);
     }
 
-
-    public function update(Request $request, Notification $notification)
+    public function markAsRead($id)
     {
-        //
-    }
+        $notification = Notification::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-    public function destroy(Notification $notification)
-    {
-        //
+        $notification->update(['is_read' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đã đọc thông báo'
+        ]);
     }
 
     public function markAllAsRead()
