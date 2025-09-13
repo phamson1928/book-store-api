@@ -19,7 +19,7 @@ class NotificationController extends Controller
         $data = Notification::create([
             'user_id' => null,
             'message' => $request->message,
-            'type' => 'admin'
+            'type' => 'admin',
         ]);
         return response()->json([
         'status' => 'success',
@@ -36,7 +36,7 @@ class NotificationController extends Controller
             $q->where('user_id', Auth::id())
               ->orWhereNull('user_id');
         })
-        ->select('message','type')
+        ->select('message','type','created_at')
         ->orderBy('created_at', 'desc')
         ->get();
 
@@ -47,20 +47,6 @@ class NotificationController extends Controller
     {
         Notification::where('id', $id)->where('type','admin')->delete();
         return response()->json(['message' => 'Đã xóa thành công']);
-    }
-
-    public function markAsRead($id)
-    {
-        $notification = Notification::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        $notification->update(['is_read' => true]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Đã đọc thông báo'
-        ]);
     }
 
     public function markAllAsRead()

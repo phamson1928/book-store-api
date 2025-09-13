@@ -71,9 +71,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{id}/change-requests', [OrderChangeRequestController::class, 'show']);
     
     // Thông báo
-    Route::get('/notifications', [NotificationController::class, 'showForUser']);
-    Route::put('/notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead']);
-    Route::put('/notifications/markAllAsRead', [NotificationController::class, 'markAllAsRead']);
+    Route::get('/notifications/user', [NotificationController::class, 'showForUser']);
+    Route::put('/notifications/user/markAllAsRead', [NotificationController::class, 'markAllAsRead']);
     /*
     |--------------------------------------------------------------------------
     | Admin Routes (Cần quyền admin)
@@ -104,9 +103,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 
         // CRUD Thông báo
-        Route::get('/notifications', [NotificationController::class, 'showForAdmin']);
-        Route::post('/notifications', [NotificationController::class, 'storeByAdmin']);
-        Route::delete('/notifications/{id}', [NotificationController::class, 'destroyByAdmin']);
+        Route::get('/notifications/admin', [NotificationController::class, 'showForAdmin']);
+        Route::post('/notifications/admin', [NotificationController::class, 'storeByAdmin']);
+        Route::delete('/notifications/admin/{id}', [NotificationController::class, 'destroyByAdmin']);
 
         // Thống kê Dashboard
         Route::get('/dashboard-stats', [DashboardController::class, 'stats']);
