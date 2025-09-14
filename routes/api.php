@@ -12,7 +12,8 @@ use App\Http\Controllers\{
     UserController,
     CartController,
     OrderChangeRequestController,
-    NotificationController
+    NotificationController,
+    DiscountController
 };
 
 /*
@@ -36,6 +37,8 @@ Route::get('/authors', [AuthorController::class, 'index']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
+
+Route::get('/discounts/active', [DiscountController::class, 'getActive']);
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +109,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/notifications/admin', [NotificationController::class, 'showForAdmin']);
         Route::post('/notifications/admin', [NotificationController::class, 'storeByAdmin']);
         Route::delete('/notifications/admin/{id}', [NotificationController::class, 'destroyByAdmin']);
+
+        // CRUD Giảm giá cửa hàng
+        Route::get('/discounts', [DiscountController::class, 'index']);
+        Route::post('/discounts', [DiscountController::class, 'store']);
+        Route::put('/discounts/{id}', [DiscountController::class, 'update']);
+        Route::delete('/discounts/{id}', [DiscountController::class, 'destroy']);
 
         // Thống kê Dashboard
         Route::get('/dashboard-stats', [DashboardController::class, 'stats']);
