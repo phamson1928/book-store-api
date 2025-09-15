@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
+use App\Models\Discount;
 
 
 class OrderController extends Controller
@@ -45,12 +46,17 @@ class OrderController extends Controller
             $totalCost += $price * $item->quantity;
         }
 
+        $discount = Discount::where('active', true)->value('discount_percent');
+        $discountAmount = $discount ? $totalCost * ($discount / 100) : 0;
+        $total = $totalCost - $discountAmount;
+
         $order = Order::create([
             'user_id'        => $userId,
             'payment_method' => $request->input('payment_method'),
             'phone'          => $request->input('phone'),
             'address'        => $request->input('address'),
-            'total_cost'     => $totalCost,
+            'total_cost'     => $total,
+            'discount' => $discountAmount,
             'quantity' => $totalQuantity,
             'state'         => 'Chờ xác nhận',
             'payment_status' => 'Chưa thanh toán',
@@ -146,7 +152,7 @@ class OrderController extends Controller
         $orderTotal = Order::count();
         $deliveredOrder = Order::where('state','Đã giao')->count();
         $pendingOrder = Order::where('state','Chờ xác nhận')->count();
-        $totalRevenue = Order::sum('total_cost');
+        $totalRevenue = Order::where('state','Đã giao')->sum('total_cost');
         return response()->json([
             'orderTotal' => $orderTotal,
             'deliveredOrder' => $deliveredOrder,
