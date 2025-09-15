@@ -13,7 +13,7 @@ class OrderChangeRequestController extends Controller
 {
     public function index()
     {
-        $data = OrderChangeRequest::with('user')->get();
+        $data = OrderChangeRequest::with('user')->orderBy('created_at','desc')->get();
         return response()->json($data);
     }
 
@@ -58,16 +58,16 @@ class OrderChangeRequestController extends Controller
             'status' => $request->status,
         ]);
 
-        if ('status' == 'Hoàn thành'){
+        if ($request->status == 'Hoàn thành'){
             Notification::create([
-                'user_id' => $changeRequest->user_id,
+                'user_id' => OrderChangeRequest::where('order_id', $id)->value('user_id'),
                 'message' => 'Admin đã cập nhật yêu cầu thay đổi thông tin đơn hàng của bạn',
             ]);
         }
-        else if ('status' == 'Đã từ chối'){
+        else if ($request->status == 'Đã từ chối'){
             Notification::create([
-                'user_id' => $changeRequest->user_id,
-                'message' => 'Admin đã từ chối yêu cầu thay đổi thông tin đơn hàng của bạn. Chi tiết liên hệ qua số hotline',
+                'user_id' => OrderChangeRequest::where('order_id', $id)->value('user_id'),
+                'message' => 'Admin đã từ chối yêu cầu thay đổi thông tin đơn hàng của bạn.Liên hệ qua số hotline hoặc vào lịch sử đơn hàng để biết thêm chi tiết',
             ]);
         }
 
