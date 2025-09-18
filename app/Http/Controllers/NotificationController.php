@@ -17,7 +17,7 @@ class NotificationController extends Controller
     public function storeByAdmin(Request $request)
     {
         $data = Notification::create([
-            'user_id' => null,
+            'user_id' => $request->user_id,
             'message' => $request->message,
             'type' => 'admin',
         ]);
@@ -27,6 +27,18 @@ class NotificationController extends Controller
         'data' => $data
     ], 201);
 
+    }
+
+    public function updateByAdmin(Request $request, $id)
+    {
+        $data = Notification::where('id', $id)->where('type', 'admin')->update([
+            'message' => $request->message,
+        ]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Thông báo đã được cập nhật thành công',
+            'data' => $data
+        ], 200);
     }
 
     public function showForUser()
