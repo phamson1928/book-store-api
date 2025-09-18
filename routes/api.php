@@ -38,8 +38,6 @@ Route::get('/authors', [AuthorController::class, 'index']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
-Route::get('/discounts/active', [DiscountController::class, 'getActive']);
-
 /*
 |--------------------------------------------------------------------------
 | Authenticated Routes (Cần đăng nhập)
@@ -76,6 +74,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Thông báo
     Route::get('/notifications/user', [NotificationController::class, 'showForUser']);
     Route::put('/notifications/user/markAllAsRead', [NotificationController::class, 'markAllAsRead']);
+
+    // Lấy % giảm giá cửa hàng
+    Route::get('/discounts/active', [DiscountController::class, 'getActive']);
     /*
     |--------------------------------------------------------------------------
     | Admin Routes (Cần quyền admin)
@@ -108,6 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // CRUD Thông báo
         Route::get('/notifications/admin', [NotificationController::class, 'showForAdmin']);
         Route::post('/notifications/admin', [NotificationController::class, 'storeByAdmin']);
+        Route::put('/notifications/admin/{id}', [NotificationController::class, 'updateByAdmin']);
         Route::delete('/notifications/admin/{id}', [NotificationController::class, 'destroyByAdmin']);
 
         // CRUD Giảm giá cửa hàng
