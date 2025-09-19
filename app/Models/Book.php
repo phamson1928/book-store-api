@@ -12,9 +12,7 @@ class Book extends Model
 
     protected $fillable = [
         'title',
-        // 'author_id',
         'author',
-        // 'quantity',
         'price',
         'image',
         'publication_date',
@@ -32,11 +30,6 @@ class Book extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-
-    // public function author()
-    // {
-    //     return $this->belongsTo(Author::class);
-    // }
 
     public function category()
     {

@@ -104,11 +104,11 @@ class OrderController extends Controller
         $data = $request->validated();
 
         $order = Order::findOrFail($id);
+
         if ($order->state == 'Đã giao') {
             $data['payment_status'] = 'Đã thanh toán';
         }
         $order->update($data);
-
         if ($order->state == 'Đã giao') {
             Notification::create([
                 'user_id' => $order->user_id,
@@ -152,7 +152,7 @@ class OrderController extends Controller
         $orderTotal = Order::count();
         $deliveredOrder = Order::where('state','Đã giao')->count();
         $pendingOrder = Order::where('state','Chờ xác nhận')->count();
-        $totalRevenue = Order::where('state','Đã giao')->sum('total_cost');
+        $totalRevenue = Order::where('payment_status','Đã thanh toán')->sum('total_cost');
         return response()->json([
             'orderTotal' => $orderTotal,
             'deliveredOrder' => $deliveredOrder,

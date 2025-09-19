@@ -22,7 +22,7 @@ class UpdateCategoryRequest extends FormRequest
         $categoryId = $this->route('category'); // Get ID from route parameter
         
         return [
-            'name' => 'sometimes|required|string|max:255|unique:categories,name,' . $categoryId,
+            'name' => 'sometimes|required|string|max:255|' . $categoryId,
             'description' => 'nullable|string|max:1000',
         ];
     }
@@ -35,7 +35,6 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name.required' => 'Tên thể loại là bắt buộc.',
             'name.max' => 'Tên thể loại không được vượt quá 255 ký tự.',
-            'name.unique' => 'Tên thể loại này đã tồn tại.',
             'description.max' => 'Mô tả không được vượt quá 1000 ký tự.',
         ];
     }
