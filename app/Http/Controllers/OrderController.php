@@ -104,10 +104,7 @@ class OrderController extends Controller
         $data = $request->validated();
 
         $order = Order::findOrFail($id);
-
-        if ($order->state == 'Đã giao') {
-            $data['payment_status'] = 'Đã thanh toán';
-        }
+        
         $order->update($data);
         if ($order->state == 'Đã giao') {
             Notification::create([
