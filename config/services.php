@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'zalopay' => [
+        'app_id' => env('ZALOPAY_APP_ID', '2553'),
+        'key1' => env('ZALOPAY_KEY1', 'PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL'),
+        'key2' => env('ZALOPAY_KEY2', 'kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz'),
+        'callback_url' => env('ZALOPAY_CALLBACK_URL', 'http://localhost:8000/api/zalopay/callback'),
+        'redirect_url' => env('ZALOPAY_REDIRECT_URL', 'http://localhost:3000/payment/success'),
+        'endpoint' => env('ZALOPAY_ENDPOINT', 'https://sb-openapi.zalopay.vn/v2'),
+    ],
+
 ];

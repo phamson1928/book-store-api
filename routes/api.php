@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     CartController,
     OrderChangeRequestController,
     NotificationController,
-    DiscountController
+    DiscountController,
+    ZaloPayController
 };
 
 /*
@@ -37,6 +38,9 @@ Route::get('/authors', [AuthorController::class, 'index']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
+
+// ZaloPay Webhook (không cần authentication)
+Route::post('/zalopay/callback', [ZaloPayController::class, 'callback']);
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::get('/orders', [OrderController::class, 'showByUser']);
+    Route::get('/orders/{id}/payment', [OrderController::class, 'getOrderPayment']);
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
 
     //Gửi yêu cầu thay đổi đơn hàng
     Route::post('/orders/{id}/change-requests', [OrderChangeRequestController::class, 'store']);
@@ -77,6 +83,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Lấy % giảm giá cửa hàng
     Route::get('/discounts/active', [DiscountController::class, 'getActive']);
+
+    // ZaloPay Payment Routes
+    Route::prefix('zalopay')->group(function () {
+        Route::post('/create-payment', [ZaloPayController::class, 'createPayment']);
+        Route::post('/check-status', [ZaloPayController::class, 'checkPaymentStatus']);
+        Route::get('/payments', [ZaloPayController::class, 'getUserPayments']);
+        Route::get('/payments/{id}', [ZaloPayController::class, 'getPaymentDetails']);
+        Route::post('/refund', [ZaloPayController::class, 'refund']);
+    });
     /*
     |--------------------------------------------------------------------------
     | Admin Routes (Cần quyền admin)

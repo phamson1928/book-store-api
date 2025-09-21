@@ -21,4 +21,12 @@ class Order extends Model
     public function orderChangeRequest(){
         return  $this->hasOne(OrderChangeRequest::class);
     }
+    
+    public function payments(){
+        return $this->hasMany(Payment::class);
+    }
+    
+    public function latestPayment(){
+        return $this->hasOne(Payment::class)->latest();
+    }
 }

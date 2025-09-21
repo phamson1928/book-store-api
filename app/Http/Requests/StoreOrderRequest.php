@@ -22,7 +22,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'phone'          => 'required|string|max:20',
             'address'        => 'required|string|max:255',
-            
+            'payment_method' => 'required|string|in:cod,zalopay',
         ];
     }
 
@@ -32,6 +32,9 @@ class StoreOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'phone.required' => 'Số điện thoại là bắt buộc.',
+            'phone.string' => 'Số điện thoại phải là chuỗi.',
+            'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
             'address.required' => 'Địa chỉ giao hàng là bắt buộc.',
             'address.max' => 'Địa chỉ không được vượt quá 500 ký tự.',
             'items.required' => 'Danh sách sản phẩm là bắt buộc.',
@@ -43,6 +46,8 @@ class StoreOrderRequest extends FormRequest
             'items.*.quantity.integer' => 'Số lượng phải là số nguyên.',
             'items.*.quantity.min' => 'Số lượng phải lớn hơn 0.',
             'items.*.quantity.max' => 'Số lượng không được vượt quá 100.',
+            'payment_method.required' => 'Phương thức thanh toán là bắt buộc.',
+            'payment_method.in' => 'Phương thức thanh toán không hợp lệ.',
         ];
     }
 
