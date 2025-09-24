@@ -128,7 +128,7 @@ class OrderController extends Controller
                 'message' => 'Đơn hàng #' . $order->id . ' đã bị hủy. Vui lòng check lịch sử đơn hàng để kiểm tra, hoặc liên hệ admin để biết thêm chi tiết',
             ]);
         }
-        if ($order->state == 'Chờ xác nhận') {
+        if ($order->state == 'Đã xác nhận') {
             Notification::create([
                 'user_id' => $order->user_id,
                 'message' => 'Đơn hàng #' . $order->id . ' đã được xác nhận. Vui lòng check lịch sử đơn hàng để kiểm tra',
@@ -150,6 +150,14 @@ class OrderController extends Controller
     public function destroy($id)
     {
         Order::findOrFail($id)->delete();
+        return response()->json([
+            'message' => 'Xóa đơn hàng thành công'
+        ]);
+    }
+
+    public function destroyByUser($id)
+    {
+        Order::where('id', $id)->where('user_id', Auth::id())->where('payment_status', 'Chưa thanh toán')->where('state', 'Chờ xác nhận')->delete();
         return response()->json([
             'message' => 'Xóa đơn hàng thành công'
         ]);
