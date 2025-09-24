@@ -34,15 +34,6 @@ class ZaloPayController extends Controller
 
         // Kiểm tra quyền truy cập đơn hàng
         $order = Order::findOrFail($orderId);
-        if (Auth::id() !== $order->user_id) {
-            return response()->json(['error' => 'Không có quyền truy cập đơn hàng này'], 403);
-        }
-
-        // Kiểm tra đơn hàng đã có thanh toán thành công chưa
-        if ($order->payment_status === 'Đã thanh toán') {
-            return response()->json(['error' => 'Đơn hàng đã được thanh toán'], 400);
-        }
-
         try {
             DB::beginTransaction();
 
