@@ -6,12 +6,15 @@ use App\Models\Author;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use App\Models\Book;
+use Illuminate\Support\Facades\Cache;
 
 class AuthorController extends Controller
 {
     public function index()
     {
-        $authors = Author::all();
+        $authors = Cache::rememberForever('authors_all', function () {
+            return Author::all();
+        });
         return response()->json($authors);
     }
 
@@ -26,14 +29,17 @@ class AuthorController extends Controller
         }
         
         $author = Author::create($data);
+        Cache::forget('authors_all');
         return response()->json($author, 201);
     }
 
     public function show($id)
 {
-    $author = Author::findOrFail($id);
-
-    return response()->json($author);
+        $author = Cache::rememberForever("author_detail_{$id}", function () use ($id) {
+            return Author::findOrFail($id);
+        });
+        
+        return response()->json($author);
 }
 
 
@@ -48,6 +54,8 @@ class AuthorController extends Controller
             $data['image'] = $path;
         }
         $author->update($data);
+        Cache::forget('authors_all');
+        Cache::forget("author_detail_{$id}");
         return response()->json($author);
     }
 
@@ -55,6 +63,8 @@ class AuthorController extends Controller
     {
         $author = Author::findOrFail($id);
         $author->delete();
+        Cache::forget('authors_all');
+        Cache::forget("author_detail_{$id}");
         return response()->json(['message' => 'Author deleted successfully']);
     }
 

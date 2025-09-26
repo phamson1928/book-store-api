@@ -7,12 +7,15 @@ use App\Http\Requests\UpdateDiscountRequest;
 use App\Models\Discount;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class DiscountController extends Controller
 {
     public function index()
     {
-        $data = Discount::all();
+        $data = Cache::rememberForever('discounts_all', function () {
+            return Discount::all();
+        });
         return response()->json($data);
     }
 
@@ -25,7 +28,8 @@ class DiscountController extends Controller
         }
 
         $discount = Discount::create($request->only('discount_percent', 'active'));
-
+        Cache::forget('discounts_all');
+        Cache::forget('discount_active');
         return response()->json($discount, 201);
     }
 
@@ -40,19 +44,24 @@ class DiscountController extends Controller
         }
 
         $discount->update($request->only('discount_percent', 'active'));
-
+        Cache::forget('discounts_all');
+        Cache::forget('discount_active');
         return response()->json($discount);
     }
 
     public function destroy($id)
     {
         Discount::findOrFail($id)->delete();
+        Cache::forget('discounts_all');
+        Cache::forget('discount_active');
         return response()->json(['message' => 'Xóa giảm giá thành công']);
     }
 
      public function getActive()
     {
-        $discount = Discount::where('active', true)->select('discount_percent')->first();
+        $discount = Cache::rememberForever('discount_active', function () {
+            return Discount::where('active', true)->select('discount_percent')->first();
+        });
         return response()->json($discount);
     }
 }
