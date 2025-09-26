@@ -71,12 +71,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Quản lý đơn hàng
     Route::post('/orders', [OrderController::class, 'store']);
-    Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
-    Route::get('/orders', [OrderController::class, 'showByUser']);
     Route::get('/orders/{id}/payment', [OrderController::class, 'getOrderPayment']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
-    Route::delete('/orders/{id}', [OrderController::class, 'destroyByUser']);
+    Route::delete('/orders/user/{id}', [OrderController::class, 'destroyByUser']);
+    Route::get('/history-order', [OrderController::class, 'showByUser']);
 
     //Gửi yêu cầu thay đổi đơn hàng
     Route::post('/orders/{id}/change-requests', [OrderChangeRequestController::class, 'store']);
@@ -122,6 +121,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // CRUD Đơn hàng
         Route::put('/orders/{id}', [OrderController::class, 'update']);
         Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+        Route::get('/orders', [OrderController::class, 'index']);
 
         // CRUD Thông báo
         Route::get('/notifications/admin', [NotificationController::class, 'showForAdmin']);
