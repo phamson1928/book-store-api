@@ -20,7 +20,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['orderItems.book', 'user'])->get();
+        $orders = Order::with(['orderItems.book', 'user'])->orderBy('created_at','desc')->get();
         return response()->json($orders);
     }
 
@@ -103,12 +103,19 @@ class OrderController extends Controller
     }
 
     public function showByUser()
-    {
-        $userId = Auth::id();
-        $orders = Order::with(['orderItems.book', 'user'])->where('user_id', $userId)->get();
-        return response()->json($orders);
+{
+    $userId = Auth::id();
+    if (!$userId) {
+        return response()->json(['message' => 'Unauthenticated'], 401);
     }
-
+    
+    $orders = Order::with(['orderItems.book', 'user'])
+        ->where('user_id', $userId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+    
+    return response()->json($orders);
+}
     public function update(UpdateOrderRequest $request, $id)
     {
         $data = $request->validated();
